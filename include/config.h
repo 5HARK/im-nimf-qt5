@@ -59,7 +59,9 @@
 #define NIMF_LOCALE_DIR "/usr/local/share/locale"
 
 /* Directory for storing a socket and a lock file */
-#define NIMF_RUNTIME_DIR "/run/user/%d/nimf"
+#define NIMF_RUNTIME_DIR1 "/run/user/%d/nimf"
+#define NIMF_RUNTIME_DIR2 "/var/run/user/%d/nimf"
+#define NIMF_RUNTIME_DIR3 "/tmp/nimf-%d"
 
 /* Name of package */
 #define PACKAGE "nimf"

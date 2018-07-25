@@ -27,6 +27,8 @@
 #include "nimf-types.h"
 #include "nimf-private.h"
 
+#include "im-nimf-qt5-util.h"
+
 G_BEGIN_DECLS
 
 #define NIMF_TYPE_CLIENT             (nimf_client_get_type ())

@@ -665,7 +665,7 @@ nimf_server_start (NimfServer *server, gboolean start_indicator)
   if ((uid = audit_getloginuid ()) == (uid_t) -1)
     uid = getuid ();
 
-  server->path = g_strdup_printf (NIMF_RUNTIME_DIR"/socket", uid);
+  server->path = g_strdup_printf (nimf_util_get_runtime_dir(), uid);
   server->service = g_socket_service_new ();
 
   if (g_unix_socket_address_abstract_names_supported ())

@@ -219,7 +219,7 @@ nimf_client_connect (NimfClient *client)
   GStatBuf info;
   gint     retval;
 
-  path   = g_strdup_printf (NIMF_RUNTIME_DIR"/socket", client->uid);
+  path   = g_strdup_printf (nimf_util_get_runtime_dir(), client->uid);
   retval = g_stat (path, &info);
 
   if (retval == 0 && client->uid != info.st_uid)
@@ -362,7 +362,7 @@ nimf_client_init (NimfClient *client)
   {
     GFile *file;
 
-    path = g_strdup_printf (NIMF_RUNTIME_DIR"/socket", client->uid);
+    path = g_strdup_printf (nimf_util_get_runtime_dir(), client->uid);
     file = g_file_new_for_path (path);
 
     client->monitor = g_file_monitor_file (file, G_FILE_MONITOR_NONE, NULL, NULL);

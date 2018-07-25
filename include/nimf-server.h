@@ -33,6 +33,8 @@
 #include "nimf-engine.h"
 #include "nimf-preeditable.h"
 
+#include "im-nimf-qt5-util.h"
+
 G_BEGIN_DECLS
 
 #define NIMF_TYPE_SERVER             (nimf_server_get_type ())

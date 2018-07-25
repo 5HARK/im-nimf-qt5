@@ -3,6 +3,7 @@ TARGET = nimfplatforminputcontextplugin
 QT += dbus gui-private
 
 SOURCES += $$PWD/im-nimf-qt5.cpp \
+           $$PWD/include/im-nimf-qt5-util.c \
            $$PWD/include/nimf-candidatable.c \
            $$PWD/include/nimf-client.c \
            $$PWD/include/nimf-connection.c \

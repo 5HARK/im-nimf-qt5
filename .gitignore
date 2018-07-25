@@ -1,0 +1,7 @@
+.moc/
+.obj/
+Makefile
+*~
+*.sw[mnpcod]
+*.tmp.*
+\#*\#

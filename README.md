@@ -1,5 +1,5 @@
 # Build instructions for tdesktop client to compatible with nimf
-This document is based on Telegram v1.3.9 version and nimf 2018.07.09 version.
+This document is based on Telegram v1.3.10 version and nimf 2018.08.03 version.
 ## Build instructions for GYP/CMake under Ubuntu 16.04
 
 ### Create & Run docker container for build

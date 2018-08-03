@@ -192,7 +192,7 @@ Modify the `tdesktop/Telegram/SourceFiles/qt_static_plugins.cpp`
  Q_IMPORT_PLUGIN(QIbusPlatformInputContextPlugin)
  Q_IMPORT_PLUGIN(QFcitxPlatformInputContextPlugin)
  Q_IMPORT_PLUGIN(QHimePlatformInputContextPlugin)
-+Q_IMPORT_PLUGIN(QNimfPlatformInputContextPlugin)
++Q_IMPORT_PLUGIN(NimfInputContextPlugin)
  #endif // Q_OS_WIN | Q_OS_MAC | Q_OS_LINUX
 ```
 
@@ -205,7 +205,6 @@ Modify the `tdesktop/Telegram/gyp/telegram_linux.gypi`
        'fcitxplatforminputcontextplugin',
        'himeplatforminputcontextplugin',
 +      'nimfplatforminputcontextplugin',
-+      'audit',
 +      'gio-2.0',
 +      'gobject-2.0',
        'liblzma.a',

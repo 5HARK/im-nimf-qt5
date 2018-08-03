@@ -21,27 +21,16 @@
 
 #ifndef __NIMF_PRIVATE_H__
 #define __NIMF_PRIVATE_H__
-/*
+
 #if !defined (__NIMF_H_INSIDE__) && !defined (NIMF_COMPILATION)
 #error "Only <nimf.h> can be included directly."
 #endif
-*/
+
 #include <glib-object.h>
-#include "nimf-server.h"
 #include "nimf-message.h"
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
-
-typedef struct _NimfServer NimfServer;
-
-typedef struct _NimfEnginePrivate NimfEnginePrivate;
-
-struct _NimfEnginePrivate
-{
-  NimfServer *server;
-  gchar      *surrounding_text;
-  gint        surrounding_cursor_index;
-};
 
 typedef struct _NimfResult NimfResult;
 
@@ -66,6 +55,8 @@ void         nimf_result_iteration_until (NimfResult      *result,
                                           GMainContext    *main_context,
                                           guint16          icid,
                                           NimfMessageType  type);
+gchar       *nimf_get_socket_path (void);
+
 G_END_DECLS
 
 #endif /* __NIMF_PRIVATE_H__ */

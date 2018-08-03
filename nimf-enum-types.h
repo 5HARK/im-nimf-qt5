@@ -3,11 +3,11 @@
 
 #ifndef __NIMF_ENUM_TYPES_H__
 #define __NIMF_ENUM_TYPES_H__
-/*
+
 #if !defined (__NIMF_H_INSIDE__) && !defined (NIMF_COMPILATION)
 #error "Only <nimf.h> can be included directly."
 #endif
-*/
+
 #include <glib-object.h>
 
 G_BEGIN_DECLS

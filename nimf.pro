@@ -15,12 +15,10 @@ HEADERS += $$PWD/nimf-client.h \
            $$PWD/nimf-types.h
 
 DEFINES += NIMF_COMPILATION USE_DLFCN
-           
+
 OTHER_FILES += $$PWD/nimf.json
 
 CONFIG += link_pkgconfig no_keywords
-PKGCONFIG += glib-2.0 gtk+-2.0
-
 
 PLUGIN_TYPE = platforminputcontexts
 PLUGIN_EXTENDS = -

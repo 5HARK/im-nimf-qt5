@@ -1,3 +1,6 @@
+
+[This patch is merged into tdesktop project via PR.](https://github.com/telegramdesktop/tdesktop/pull/5050)
+
 # Build instructions for tdesktop client to compatible with nimf
 This document is based on Telegram v1.3.10 version and nimf 2018.08.03 version.
 ## Build instructions for GYP/CMake under Ubuntu 16.04

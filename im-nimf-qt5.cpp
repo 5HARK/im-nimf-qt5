@@ -3,7 +3,7 @@
  * im-nimf-qt5.cpp
  * This file is part of Nimf.
  *
- * Copyright (C) 2015-2018 Hodong Kim <cogniti@gmail.com>
+ * Copyright (C) 2015-2019 Hodong Kim <cogniti@gmail.com>
  *
  * Nimf is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -26,6 +26,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 #include "nimf-im.h"
+#include <gio/gio.h>
 
 #ifdef USE_DLFCN
 
@@ -47,9 +48,6 @@ typedef struct
                                        const NimfRectangle *area);
   void     (* im_set_use_preedit)     (NimfIM              *im,
                                        gboolean             use_preedit);
-  gboolean (* im_get_surrounding)     (NimfIM              *im,
-                                       gchar              **text,
-                                       gint                *cursor_index);
   void     (* im_set_surrounding)     (NimfIM              *im,
                                        const char          *text,
                                        gint                 len,
@@ -316,7 +314,31 @@ NimfInputContext::on_retrieve_surrounding (NimfIM *im, gpointer user_data)
   g_debug (G_STRLOC ": %s", G_STRFUNC);
 #endif
 
-  return FALSE;
+  QObject *object = qApp->focusObject();
+
+  if (!object)
+    return FALSE;
+
+  NimfInputContext *context = static_cast<NimfInputContext *>(user_data);
+
+  QInputMethodQueryEvent surrounding_query (Qt::ImSurroundingText);
+  QInputMethodQueryEvent position_query    (Qt::ImCursorPosition);
+
+  QCoreApplication::sendEvent (object, &surrounding_query);
+  QCoreApplication::sendEvent (object, &position_query);
+
+  QString string = surrounding_query.value (Qt::ImSurroundingText).toString();
+  uint pos = position_query.value (Qt::ImCursorPosition).toUInt();
+
+#ifndef USE_DLFCN
+  nimf_im_set_surrounding (context->m_im,
+                           string.toUtf8().constData(), -1, pos);
+#else
+  nimf_api->im_set_surrounding (context->m_im,
+                                string.toUtf8().constData(), -1, pos);
+#endif
+
+  return TRUE;
 }
 
 gboolean
@@ -329,7 +351,16 @@ NimfInputContext::on_delete_surrounding (NimfIM   *im,
   g_debug (G_STRLOC ": %s", G_STRFUNC);
 #endif
 
-  return FALSE;
+  QObject *object = qApp->focusObject();
+
+  if (!object)
+    return FALSE;
+
+  QInputMethodEvent event;
+  event.setCommitString ("", offset, n_chars);
+  QCoreApplication::sendEvent (object, &event);
+
+  return TRUE;
 }
 
 void
@@ -522,7 +553,7 @@ NimfInputContext::commit ()
 }
 
 void
-NimfInputContext::update (Qt::InputMethodQueries queries) /* FIXME */
+NimfInputContext::update (Qt::InputMethodQueries queries)
 {
 #ifndef USE_DLFCN
   g_debug (G_STRLOC ": %s", G_STRFUNC);
@@ -603,7 +634,7 @@ NimfInputContext::filterEvent (const QEvent *event)
 
   nimf_event->key.state            = key_event->nativeModifiers  ();
   nimf_event->key.keyval           = key_event->nativeVirtualKey ();
-  nimf_event->key.hardware_keycode = key_event->nativeScanCode   (); /* FIXME: guint16 quint32 */
+  nimf_event->key.hardware_keycode = key_event->nativeScanCode   ();
 
 #ifndef USE_DLFCN
   retval = nimf_im_filter_event (m_im, nimf_event);
@@ -721,7 +752,7 @@ public:
 #endif
 
 #ifdef USE_DLFCN
-    libnimf    = dlopen ("libnimf.so.0",        RTLD_LAZY);
+    libnimf    = dlopen ("libnimf.so.1",        RTLD_LAZY);
     libglib    = dlopen ("libglib-2.0.so.0",    RTLD_LAZY);
     libgobject = dlopen ("libgobject-2.0.so.0", RTLD_LAZY);
     libgio     = dlopen ("libgio-2.0.so.0",     RTLD_LAZY);
@@ -737,7 +768,6 @@ public:
       nimf_api->im_get_preedit_string  = reinterpret_cast<void (*) (NimfIM*, gchar**, NimfPreeditAttr***, gint*)> (dlsym (libnimf, "nimf_im_get_preedit_string"));
       nimf_api->im_set_cursor_location = reinterpret_cast<void (*) (NimfIM*, const NimfRectangle*)> (dlsym (libnimf, "nimf_im_set_cursor_location"));
       nimf_api->im_set_use_preedit     = reinterpret_cast<void (*) (NimfIM*, gboolean)> (dlsym (libnimf, "nimf_im_set_use_preedit"));
-      nimf_api->im_get_surrounding     = reinterpret_cast<gboolean (*) (NimfIM*, gchar**, gint*)> (dlsym (libnimf, "nimf_im_get_surrounding"));
       nimf_api->im_set_surrounding     = reinterpret_cast<void (*) (NimfIM*, const char*, gint, gint)> (dlsym (libnimf, "nimf_im_set_surrounding"));
       nimf_api->event_new              = reinterpret_cast<NimfEvent * (*) (NimfEventType)> (dlsym (libnimf, "nimf_event_new"));
       nimf_api->event_free             = reinterpret_cast<void (*) (NimfEvent*)> (dlsym (libnimf, "nimf_event_free"));

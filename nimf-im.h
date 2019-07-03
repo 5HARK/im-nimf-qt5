@@ -3,7 +3,7 @@
  * nimf-im.h
  * This file is part of Nimf.
  *
- * Copyright (C) 2015-2018 Hodong Kim <cogniti@gmail.com>
+ * Copyright (C) 2015-2019 Hodong Kim <cogniti@gmail.com>
  *
  * Nimf is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -27,7 +27,6 @@
 #endif
 
 #include <glib-object.h>
-#include "nimf-client.h"
 #include "nimf-events.h"
 #include "nimf-types.h"
 
@@ -37,32 +36,29 @@ G_BEGIN_DECLS
 #define NIMF_IM(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), NIMF_TYPE_IM, NimfIM))
 #define NIMF_IM_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), NIMF_TYPE_IM, NimfIMClass))
 #define NIMF_IS_IM(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), NIMF_TYPE_IM))
-#define NIMF_IS_IM_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), NIMF_TYPE_IM))
 #define NIMF_IM_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), NIMF_TYPE_IM, NimfIMClass))
 
-typedef struct _NimfIM      NimfIM;
-typedef struct _NimfIMClass NimfIMClass;
+typedef struct _NimfIM        NimfIM;
+typedef struct _NimfIMClass   NimfIMClass;
+typedef struct _NimfIMPrivate NimfIMPrivate;
 
 struct _NimfIM
 {
-  NimfClient parent_instance;
-
-  gchar            *preedit_string;
-  NimfPreeditAttr **preedit_attrs;
-  gint              cursor_pos;
+  GObject parent_instance;
+  NimfIMPrivate *priv;
 };
 
 struct _NimfIMClass
 {
   /*< private >*/
-  NimfClientClass parent_class;
+  GObjectClass parent_class;
 
   /*< public >*/
   /* Signals */
   void     (*preedit_start)        (NimfIM *im);
   void     (*preedit_end)          (NimfIM *im);
   void     (*preedit_changed)      (NimfIM *im);
-  void     (*commit)               (NimfIM *im, const gchar *str);
+  void     (*commit)               (NimfIM *im, const gchar *text);
   gboolean (*retrieve_surrounding) (NimfIM *im);
   gboolean (*delete_surrounding)   (NimfIM *im,
                                     gint    offset,
@@ -85,9 +81,6 @@ void      nimf_im_set_cursor_location     (NimfIM              *im,
                                            const NimfRectangle *area);
 void      nimf_im_set_use_preedit         (NimfIM              *im,
                                            gboolean             use_preedit);
-gboolean  nimf_im_get_surrounding         (NimfIM              *im,
-                                           gchar              **text,
-                                           gint                *cursor_index);
 void      nimf_im_set_surrounding         (NimfIM              *im,
                                            const char          *text,
                                            gint                 len,
